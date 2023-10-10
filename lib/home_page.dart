@@ -1,11 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:html' as html;
 
 SizedBox customHeight(double value) => SizedBox(height: value);
 
 SizedBox customWeight(double value) => SizedBox(width: value);
 
 TextStyle defaultTxtStyle() => const TextStyle(fontSize: 16);
+
+TextStyle titleTxtStyle() => const TextStyle(fontSize: 24);
+
+class ProjectCard {
+  String description;
+  String imageURL;
+
+  ProjectCard({required this.description, required this.imageURL});
+}
+
+List<ProjectCard> get projectList => [
+      ProjectCard(
+          description:
+              "The HRM mobile app, skillfully crafted, streamlines workforce management with features like attendance tracking, leave requests, and easy access to payslips, enhancing organizational efficiency and employee satisfaction.",
+          imageURL: "assets/images/hrm.png"),
+      ProjectCard(
+          description:
+              "The Rider Delivery mobile app seamlessly integrates Google Maps for real-time navigation and offers a secure payment gateway for the app developer's convenience and efficient delivery services.",
+          imageURL: "assets/images/rider.png"),
+      ProjectCard(
+          description:
+              "Create a seamless shopping experience with our e-commerce mobile app. Featuring user-friendly navigation, secure payments, and personalized recommendations, it's designed to boost sales and customer satisfaction.",
+          imageURL: "assets/images/ecommerce.png"),
+      ProjectCard(
+          description:
+              "The Knowledge mobile app combines a smart AI chatbot with seamless Firebase integration, providing users with instant access to a vast database of information and real-time interactive assistance.",
+          imageURL: "assets/images/vumi.png"),
+    ];
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
@@ -87,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _skillAndPersonalInterest(),
         customHeight(50),
         _workHistory(),
+        customHeight(50),
       ],
     );
   }
@@ -154,7 +184,14 @@ class _MyHomePageState extends State<MyHomePage> {
               customWeight(16),
               Text("Apps", style: defaultTxtStyle()),
               customWeight(16),
-              Text("Resume", style: defaultTxtStyle()),
+              InkWell(
+                  onTap: () {
+                    html.window.open(
+                        "https://github.com/ahmeed-evan/evan_ahmed_portfolio/blob/main/mobile_application_dev_evan_ahmed.pdf",
+                        "_blank",
+                        "location=yes");
+                  },
+                  child: Text("Resume", style: defaultTxtStyle())),
               customWeight(16),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -386,7 +423,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         Expanded(
-            child: _sideImage("assets/images/22343631_Content creator editing video footage in studio.jpg")),
+            child: _sideImage(
+                "assets/images/22343631_Content creator editing video footage in studio.jpg")),
       ],
     );
   }
@@ -412,7 +450,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         Expanded(
-            child: _sideImage("assets/images/16503741_37Z_2105.w007.n001.17B.p12.17.jpg")),
+            child: _sideImage(
+                "assets/images/16503741_37Z_2105.w007.n001.17B.p12.17.jpg")),
       ],
     );
   }
@@ -462,8 +501,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _workHistory() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width*.7,
-      child: Text("Hello"),
+      width: MediaQuery.of(context).size.width * .7,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        Text(
+          "Browse My Recent",
+          style: defaultTxtStyle().copyWith(color: Colors.grey),
+        ),
+        Text(
+          "Projects",
+          style: titleTxtStyle().copyWith(fontWeight: FontWeight.bold),
+        ),
+        GridView.builder(
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: 6 / 7,
+            crossAxisCount: 2, // number of items in each row
+            mainAxisSpacing: 8.0, // spacing between rows
+            crossAxisSpacing: 8.0, // spacing between columns
+          ),
+          padding: const EdgeInsets.all(10.0),
+          // padding around the grid
+          itemCount: projectList.length,
+          // total number of items
+          itemBuilder: (context, index) {
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black54, width: 2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              // color of grid items
+              child: _projectContainer(index),
+            );
+          },
+        )
+      ]),
+    );
+  }
+
+  Widget _projectContainer(int index) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 400,
+          child: Image.asset(projectList[index].imageURL),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            projectList[index].description,
+            style: defaultTxtStyle(),
+          ),
+        )
+      ],
     );
   }
 }
